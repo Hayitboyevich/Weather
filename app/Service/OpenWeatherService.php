@@ -4,15 +4,20 @@ namespace App\Service;
 
 use Illuminate\Support\Facades\Http;
 
-class OpenWeatherService
+class OpenWeatherService implements WeatherInterface
 {
-    const KEY = 'd7f030e1b1b35529aee8504dbc900ed3';
     const URL = 'https://api.openweathermap.org/data/2.5/weather';
+    const OPEN_WEATHER = 'open-weather-map';
 
-    public static function getWeather($city)
+    public  function getWeather(string $city)
     {
-        $openWeather = Http::get(self::URL.'?q='.$city.'&appid='.self::KEY.'&units=metric');
+        $openWeather = Http::get(self::URL.'?q='.$city.'&appid='.env('OPEN_WEATHER').'&units=metric');
         $data = json_decode($openWeather->getBody());
         return  $data->main->temp;
+    }
+
+    public static function getName(): string
+    {
+        return self::OPEN_WEATHER;
     }
 }
